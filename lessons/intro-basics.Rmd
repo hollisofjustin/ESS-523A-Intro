@@ -1,7 +1,7 @@
 ---
 title: "Intro to Environmental Data Science in R"
 author: "Caitlin Mothes"
-date: '2022-12-20'
+date: "`r Sys.Date()`"
 output: github_document
 ---
 
@@ -25,7 +25,9 @@ When you first open RStudio, it is split into 3 panels:
 
 ![Image Credit: Software Carpentry](https://swcarpentry.github.io/r-novice-gapminder/fig/01-rstudio.png){width="100%"}
 
-To write and save code you use scripts. You can open a new script with File -\> New File or by clicking the icon with the green plus sign in the upper left corner. When you open a script, RStudio then opens a fourth **'Source' panel** in the upper-left to write and save your code. You can also send code from a script directly to the console to execute it by highlighting the code line/chunk (or place your cursor at the end of the code chunk) and hit CTRL+ENTER on a PC or CMD+ENTER on a Mac.
+<br>
+
+To write and save code you use scripts. You can open a new script with File -> New File or by clicking the icon with the green plus sign in the upper left corner. When you open a script, RStudio then opens a fourth **'Source' panel** in the upper-left to write and save your code. You can also send code from a script directly to the console to execute it by highlighting the code line/chunk (or place your cursor at the end of the code chunk) and hit CTRL+ENTER on a PC or CMD+ENTER on a Mac.
 
 ![Image Credit: Software Carpentry](https://swcarpentry.github.io/r-novice-gapminder/fig/01-rstudio-script.png)
 
@@ -79,7 +81,29 @@ Let's start coding!
 
 The first thing you do in a fresh R session is set up your environment, which mostly includes installing and loading necessary libraries and reading in required data sets. Let's open a fresh R script and save it in our root (project) directory. Call this script 'setup.R'.
 
-### 4.1 Packages
+### 4.1 Functions
+
+Before creating a set up script, it might be helpful to understand the use of functions in R if you are new to this programming language. R has many built in functions to perform various tasks. To run these functions you type the function name followed by parentheses. Within the parentheses you put in your specific arguments needed to run the function.
+
+```{r}
+# mathematical functions with numbers
+log(10)
+
+# average a range of numbers
+mean(1:5)
+
+# nested functions for a string of numbers, using the concatenate function 'c'
+mean(c(1,2,3,4,5))
+
+
+# functions with characters
+print("Hello World")
+
+paste("Hello", "World", sep = "-")
+```
+
+
+### 4.2 Packages
 
 R Packages include reusable functions that are not built-in with R. To use these functions, you must install the package to your local system with the `install.packages()` function. Once a package is installed on your computer you don't need to install it again. Anytime you want to use the package in a new R session you load it with the `library()` function.
 
@@ -87,11 +111,11 @@ R Packages include reusable functions that are not built-in with R. To use these
 
 If you have a package installed, you don't necessarily have to load it in with `library()` to use it in your R session. Instead you can type the package name followed by `::` and use any functions in that package. This may be useful for some one-off functions using specifici package, however if you will be using packages a lot throughout your workflow you will want to load it in to your session. You should also use `::` in cases where you have multiple packages loaded that may have conflicting functions (e.g., `plot()` in Base R vs. `plot()` in the `terra` package).
 
-#### 4.1.1 Base R vs. The Tidyverse
+#### 4.2.1 Base R vs. The Tidyverse
 
 You may hear us use the terms 'Base R' and 'Tidyverse' a lot throughout this course. Base R includes functions that are installed with the R software and do not require the installation of additional packages to use them. The Tidyverse is a collection of R packages designed for data manipulation, exploration, and visualization that you are likely to use in every day data analysis, and all use the same design philosophy, grammar, and data structures. When you install the Tidyverse, it installs all of these packages, and you can then load all of them in your R session with `library(tidyverse)`. Base R and Tidyverse have many similar functions, but many prefer the style, efficiency and functionality of the Tidyverse packages, and we will mostly be sticking to Tidyverse functions for this course.
 
-#### 4.1.2 Package load function
+#### 4.2.2 Package load function
 
 To make code reproducible (meaning anyone can run your code from their local machines) we can write a function that checks whether or not necessary packages are installed, if not install them and load them, but if they are it will only load them and not re-install. This function looks like:
 
@@ -109,7 +133,7 @@ packageLoad <-
 
 ```
 
-For each package name given ('x') it checks if it is already installed, if not installs it, and then loads that package into the session. Put this function and the top of your set up script, and then use it to install the `tidyverse` package.
+For each package name given ('x') it checks if it is already installed, if not installs it, and then loads that package into the session. In Week 3 you will learn more about writing custom functions, but for now you can copy/paste this function and put it at the top of your set up script. When you execute this chunk of code, you won't see anything printed in the console, however you should now see `packageLoad()` in your Environment under 'Functions'. You can now use this function as many times as you want. Test is out, and use it to install the `tidyverse` package(s).
 
 ```{r}
 packageLoad('tidyverse')
@@ -162,7 +186,6 @@ Since this is a notebook style document, you run the code chunks by clicking the
 
 When you want to create a report from your notebook, you render it by hitting the 'knit' button, and it will render to the format you have specified in the YAML header. In order to do so though, you need to have the `rmarkdown` package installed, so go back to your 'setup.R' script, add `rmarkdown` to your packages variable and save it.
 
-#### OK FINALLY we can start coding
 
 You can delete the rest of the code/text below the YAML header, and insert a new code chunk at the top. You can insert code chunks by clicking the green C with the '+' sign at the top of the source editor, or with the keyboard short cut (Ctrl+Alt+I for Windows, Option+Command+I for Macs). For the rest of the lesson (and course) you will be writing and executing code through code chunks, and you can type any notes in the main body of the document (*refer to the lecture video about using the Source vs. Visual editor*).
 
@@ -191,6 +214,8 @@ You now see it in the Environment pane. Print it to the console to see a snapsho
 ```{r}
 penguins
 ```
+
+### 6.2 Data Types
 
 This data is structured is a data frame, probably the most common data type and one you are most familiar with. These are like Excel spread sheets, tabular data organized by rows and columns. However we see at the top this is called a `tibble` which is just a fancy kind of data frame specific to the `tidyvese`.
 
@@ -253,7 +278,7 @@ names(myList) <- c("fruit", "year", "logic", "data")
 names(myList)
 ```
 
-### 6.2 Indexing
+### 6.3 Indexing
 
 Indexing is an extremely important aspect to data exploration and manipulation. In fact you already started indexing when we looked at the data type of individual columns with `penguins$species`. How you index is dependent on the data structure.
 
@@ -293,7 +318,7 @@ penguins[penguins$sex=='female',]
 penguins$species
 ```
 
-#### 6.2.1 Exercises
+#### 6.3.1 Exercises
 
 1.  Why don't the following lines of code work? Tweak each one so the code runs
 
@@ -315,7 +340,7 @@ penguins$species
 
 4.  What is the average flipper length for the Adelie species on Dream island? (Note: explore the `mean()` function and how to deal with NA values).
 
-### 6.3 The `dplyr` package
+### 6.4 The `dplyr` package
 
 So far the code you've been writing has consisted of Base R functionality. Now lets dive into the Tidyverse with the `dplyr` package.
 
@@ -330,7 +355,7 @@ arrange(penguins, sex)
 arrange(penguins, desc(species), sex)
 ```
 
-**Note: Tidyverse package functions take in column names *without*quotations.**
+**Note: Tidyverse package functions take in column names *without* quotations.**
 
 Subset rows with `filter()`
 
@@ -377,7 +402,7 @@ mutate(penguins, species_sex = if_else(sex == 'male', paste0(species,"_m"), past
 
 These can all be used in conjunction with [`group_by()`](https://dplyr.tidyverse.org/reference/group_by.html) which changes the scope of each function from operating on the entire dataset to operating on it group-by-group. `group_by()` becomes even more powerful when used along with `summarise()`. However before we start using multiple operations in conjunction with one another, we need to talk about the pipe operator `%>%`.
 
-#### 6.3.1 The pipe `%>%`
+#### 6.4.1 The pipe `%>%`
 
 The pipe, `%>%`, comes from the **magrittr** package by Stefan Milton Bache. Packages in the tidyverse load `%>%` for you automatically, so you don't usually load magrittr explicitly. Pipes are a powerful tool for clearly expressing a sequence of multiple operations.
 

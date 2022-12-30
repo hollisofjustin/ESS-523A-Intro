@@ -105,12 +105,16 @@ By default, the `tigris` package imports spatial data in `sf` format, which stan
 
 For example, we are going to do an exercise for the Poudre Canyon Highway, so we want to filter out the roads data set to only those features. Using your investigative geography skills, find the highway on your map, find out what the exact 'FULLNAME' attribute is, and use that to `filter()` the data set.
 
-```{r class.source = 'fold-hide'}
+<details>
+  <summary>Show Answer</summary>
+```{r}
 poudre_hwy <- roads %>% 
   filter(FULLNAME == "Poudre Canyon Hwy")
 
 qtm(poudre_hwy)
 ```
+</details>
+
 
 #### Points
 
@@ -251,7 +255,7 @@ writeRaster(elevation_crop, "data/elevation_larimer.tif")
 
 Same as with the vector data, when saving raster data you must add the '.tif' file extension to the name. Unlike vector data, there are various formats raster data can be stored as (e.g., ASCII, ESRI Grid) but GeoTiffs are the most common and generally easiest to deal with in R.
 
-### 3.2 RData Files
+### 3.2 .RData Files
 
 Another way you can store data is saving your environmental variables as R Data objects. You may have already seen '.RData' files in your folders before if you ever click 'yes' when closing out of RStudio asks you to save your workspace. What this does is save everything in your environment to a file with a '.RData' extention in your project directory, and then every time you open your project it reloads everything that was in the environment. This however is often poor practice, as it prevents you from writing reproducible code and all those variables start racking up storage space on your computer.
 
@@ -305,11 +309,8 @@ To read in raster files you use the `rast()` function and file path with the app
 rast("data/elevation_larimer.tif")
 ```
 
-Remember when reding in files you will want to assign them to a new variable name with `<-` to keep them in your environment.
+Remember when reading in files you will want to assign them to a new variable name with `<-` to keep them in your environment.
 
-### What about non-spatial data?
-
-We haven't really covered this yet, but another file type you will often need to read and write throughout this course are .csv files. You can do that with the `read_csv()` and `write_csv()` functions from the `readr` package (a member of the Tidyverse).
 
 ### 4. Exercises
 

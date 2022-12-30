@@ -1,7 +1,7 @@
 Intro to Environmental Data Science in R
 ================
 Caitlin Mothes
-2022-12-20
+2022-12-30
 
 ## Before this Lesson…
 
@@ -32,6 +32,8 @@ style="width:100.0%" alt="Image Credit: Software Carpentry" />
 <figcaption aria-hidden="true">Image Credit: Software
 Carpentry</figcaption>
 </figure>
+
+<br>
 
 To write and save code you use scripts. You can open a new script with
 File -\> New File or by clicking the icon with the green plus sign in
@@ -138,7 +140,33 @@ which mostly includes installing and loading necessary libraries and
 reading in required data sets. Let’s open a fresh R script and save it
 in our root (project) directory. Call this script ‘setup.R’.
 
-### 4.1 Packages
+### 4.1 Functions
+
+Before creating a set up script, it might be helpful to understand the
+use of functions in R if you are new to this programming language. R has
+many built in functions to perform various tasks. To run these functions
+you type the function name followed by parentheses. Within the
+parentheses you put in your specific arguments needed to run the
+function.
+
+``` r
+# mathematical functions with numbers
+log(10)
+
+# average a range of numbers
+mean(1:5)
+
+# nested functions for a string of numbers, using the concatenate function 'c'
+mean(c(1,2,3,4,5))
+
+
+# functions with characters
+print("Hello World")
+
+paste("Hello", "World", sep = "-")
+```
+
+### 4.2 Packages
 
 R Packages include reusable functions that are not built-in with R. To
 use these functions, you must install the package to your local system
@@ -146,6 +174,18 @@ with the `install.packages()` function. Once a package is installed on
 your computer you don’t need to install it again. Anytime you want to
 use the package in a new R session you load it with the `library()`
 function.
+
+**When do I use** `::` ?
+
+If you have a package installed, you don’t necessarily have to load it
+in with `library()` to use it in your R session. Instead you can type
+the package name followed by `::` and use any functions in that package.
+This may be useful for some one-off functions using specifici package,
+however if you will be using packages a lot throughout your workflow you
+will want to load it in to your session. You should also use `::` in
+cases where you have multiple packages loaded that may have conflicting
+functions (e.g., `plot()` in Base R vs. `plot()` in the `terra`
+package).
 
 #### 4.2.1 Base R vs. The Tidyverse
 
@@ -183,9 +223,14 @@ packageLoad <-
 ```
 
 For each package name given (‘x’) it checks if it is already installed,
-if not installs it, and then loads that package into the session. Put
-this function and the top of your set up script, and then use it to
-install the `tidyverse` package.
+if not installs it, and then loads that package into the session. In
+Week 3 you will learn more about writing custom functions, but for now
+you can copy/paste this function and put it at the top of your set up
+script. When you execute this chunk of code, you won’t see anything
+printed in the console, however you should now see `packageLoad()` in
+your Environment under ‘Functions’. You can now use this function as
+many times as you want. Test is out, and use it to install the
+`tidyverse` package(s).
 
 ``` r
 packageLoad('tidyverse')
@@ -201,7 +246,11 @@ packages <- c('tidyverse',
               'palmerpenguins',
               'sf',
               'terra',
-              'mapview')
+              'tmap',
+              'rmarkdown',
+              'tigris',
+              'elevatr',
+              'rgdal')
 
 packageLoad(packages)
 ```
@@ -268,8 +317,6 @@ specified in the YAML header. In order to do so though, you need to have
 the `rmarkdown` package installed, so go back to your ‘setup.R’ script,
 add `rmarkdown` to your packages variable and save it.
 
-#### OK FINALLY we can start coding
-
 You can delete the rest of the code/text below the YAML header, and
 insert a new code chunk at the top. You can insert code chunks by
 clicking the green C with the ‘+’ sign at the top of the source editor,
@@ -317,6 +364,8 @@ snapshot of the data:
 ``` r
 penguins
 ```
+
+### 6.2 Data Types
 
 This data is structured is a data frame, probably the most common data
 type and one you are most familiar with. These are like Excel spread
@@ -392,7 +441,7 @@ names(myList) <- c("fruit", "year", "logic", "data")
 names(myList)
 ```
 
-### 6.2 Indexing
+### 6.3 Indexing
 
 Indexing is an extremely important aspect to data exploration and
 manipulation. In fact you already started indexing when we looked at the
@@ -434,7 +483,7 @@ penguins[penguins$sex=='female',]
 penguins$species
 ```
 
-#### 6.2.1 Exercises
+#### 6.3.1 Exercises
 
 1.  Why don’t the following lines of code work? Tweak each one so the
     code runs
@@ -461,7 +510,7 @@ penguins$species
     island? (Note: explore the `mean()` function and how to deal with NA
     values).
 
-### 6.3 The `dplyr` package
+### 6.4 The `dplyr` package
 
 So far the code you’ve been writing has consisted of Base R
 functionality. Now lets dive into the Tidyverse with the `dplyr`
@@ -481,14 +530,14 @@ arrange(penguins, sex)
 arrange(penguins, desc(species), sex)
 ```
 
-**Note: Tidyverse package functions take in column names
-*without*quotations.**
+**Note: Tidyverse package functions take in column names *without*
+quotations.**
 
 Subset rows with `filter()`
 
 You can filter data in many ways using comparison operators (`>`, `>=`,
 `<`, `<=`, `!=` (not equal), and `==` (equal)), logical operators (`&`
-is "and", `|` is "or", and `!` is "not") and other operations such as
+is “and”, `|` is “or”, and `!` is “not”) and other operations such as
 `%in%`, which returns everything that matches at least on of the values
 in a given vector, and `is.na()` and `!is.na()` to return all missing or
 all non-missing data.
@@ -547,11 +596,11 @@ more powerful when used along with `summarise()`. However before we
 start using multiple operations in conjunction with one another, we need
 to talk about the pipe operator `%>%`.
 
-#### 6.3.1 The pipe `%>%`
+#### 6.4.1 The pipe `%>%`
 
 The pipe, `%>%`, comes from the **magrittr** package by Stefan Milton
 Bache. Packages in the tidyverse load `%>%` for you automatically, so
-you don't usually load magrittr explicitly. Pipes are a powerful tool
+you don’t usually load magrittr explicitly. Pipes are a powerful tool
 for clearly expressing a sequence of multiple operations.
 
 For example, the pipe operator can take this sequence of operations:
@@ -576,7 +625,7 @@ penguins %>%
 
 You can read it as a series of imperative statements: filter, then
 mutate, then select. A good way to pronounce `%>%` when reading code is
-"then". It takes the output of the operation to the left of `%>%` and
+“then”. It takes the output of the operation to the left of `%>%` and
 feeds it into the next function as the input.
 
 Say you want to summarize data by some specified group, for example you
@@ -658,7 +707,7 @@ ggplot(penguins) +
   geom_histogram(mapping = aes(x = flipper_length_mm))
 ```
 
-![](intro-basics_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
+![](intro-basics_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
 
 This isn’t too informative, we want to see the distributions for each
 species. We can do that by coloring the bars by species
@@ -670,7 +719,7 @@ ggplot(penguins) +
   scale_fill_manual(values = c("darkorange","darkorchid","cyan4"))
 ```
 
-![](intro-basics_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
+![](intro-basics_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
 
 Or we can use `facet_wrap()` to create a separate plot for each species
 
@@ -681,7 +730,7 @@ ggplot(penguins) +
   facet_wrap(~species)
 ```
 
-![](intro-basics_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
+![](intro-basics_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
 
 Lets make a quick bar plot showing the total count of each species
 studied on each island
@@ -691,7 +740,7 @@ ggplot(penguins) +
   geom_bar(mapping = aes(x = island, fill = species))
 ```
 
-![](intro-basics_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
+![](intro-basics_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
 
 As you may have already noticed, the beauty about `ggplot2` is there are
 a million ways you can customize your plots. This example builds on our
@@ -707,7 +756,7 @@ ggplot(penguins, aes(x = island, fill = species)) +
   coord_flip()
 ```
 
-![](intro-basics_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
+![](intro-basics_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
 
 Now make a scatterplot showing the relationship between body mass and
 flipper length, coloring the point by species
@@ -717,7 +766,7 @@ ggplot(penguins) +
   geom_point(mapping = aes(x = body_mass_g, y = flipper_length_mm, color = species))
 ```
 
-![](intro-basics_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
+![](intro-basics_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
 
 ### 7.1 Exercises
 
@@ -725,3 +774,14 @@ ggplot(penguins) +
 
 2.  Make a scatter plot of bill length compared to bill depth but only
     for observations on the Dream island.
+
+## 8. Read and Write Data
+
+We used an R data package today and read in our data frame, but that
+probably isn’t how you will normally read in your data.
+
+There are many ways to read and write data in R. To read in .csv files,
+you can use `read_csv()` which is included in the Tidyverse with the
+`readr` package, and to save csv files use `write_csv()`. The `readxl`
+package is great for reading in excel files, however it is not included
+in the Tidyverse and will need to be loaded separately.

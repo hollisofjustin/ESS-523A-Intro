@@ -136,12 +136,19 @@ features. Using your investigative geography skills, find the highway on
 your map, find out what the exact ‘FULLNAME’ attribute is, and use that
 to `filter()` the data set.
 
+<details>
+<summary>
+Show Answer
+</summary>
+
 ``` r
 poudre_hwy <- roads %>% 
   filter(FULLNAME == "Poudre Canyon Hwy")
 
 qtm(poudre_hwy)
 ```
+
+</details>
 
 #### Points
 
@@ -327,7 +334,7 @@ Same as with the vector data, when saving raster data you must add the
 formats raster data can be stored as (e.g., ASCII, ESRI Grid) but
 GeoTiffs are the most common and generally easiest to deal with in R.
 
-### 3.2 RData Files
+### 3.2 .RData Files
 
 Another way you can store data is saving your environmental variables as
 R Data objects. You may have already seen ‘.RData’ files in your folders
@@ -409,15 +416,8 @@ the appropriate file extension
 rast("data/elevation_larimer.tif")
 ```
 
-Remember when reding in files you will want to assign them to a new
+Remember when reading in files you will want to assign them to a new
 variable name with `<-` to keep them in your environment.
-
-### What about non-spatial data?
-
-We haven’t really covered this yet, but another file type you will often
-need to read and write throughout this course are .csv files. You can do
-that with the `read_csv()` and `write_csv()` functions from the `readr`
-package (a member of the Tidyverse).
 
 ### 4. Exercises
 
