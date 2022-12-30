@@ -45,7 +45,7 @@ will be saving all the data used for this week’s lesson.
 
 ### [`tigris`](https://github.com/walkerke/tigris)
 
-#### **Polygons**
+### **Polygons**
 
 All the data we are working with in this lesson is confined to the state
 of Colorado. Let’s start by pulling in political boundaries for Colorado
@@ -66,7 +66,7 @@ learn how to save shapefiles to your computer if you do in fact want to
 store and use them in the future (e.g., you manipulated a data set quite
 a bit and don’t want to re-run the entier process every new R session)
 
-#### **Lines**
+### **Lines**
 
 `tigris` has a lot of other available data sets in addition to political
 boundaries. Today let’s work with another shapefile, importing roads for
@@ -150,7 +150,7 @@ qtm(poudre_hwy)
 
 </details>
 
-#### Points
+### Points
 
 Most often when you are working with points, you start with an excel
 file or something similar that consists of the raw latitude and

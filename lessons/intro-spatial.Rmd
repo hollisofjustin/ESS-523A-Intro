@@ -46,7 +46,7 @@ First, create a new directory in your project called 'data/' where you will be s
 
 ### [`tigris`](https://github.com/walkerke/tigris)
 
-#### **Polygons**
+### **Polygons**
 
 All the data we are working with in this lesson is confined to the state of Colorado. Let's start by pulling in political boundaries for Colorado counties with the `tigris` package, which returns a shapefile consisting of polygons for each county.
 
@@ -61,7 +61,7 @@ counties <- tigris::counties(state = "CO")
 
 The `tigris` package is one of many data retrieval R packages that uses API calls to pull in data from various online/open databases directly into your R session, without the need to separately download. When you close our your R session, these 'temp' files are erased, so it does not use up any of your local storage. At the end of this lesson you will learn how to save shapefiles to your computer if you do in fact want to store and use them in the future (e.g., you manipulated a data set quite a bit and don't want to re-run the entier process every new R session)
 
-#### **Lines**
+### **Lines**
 
 `tigris` has a lot of other available data sets in addition to political boundaries. Today let's work with another shapefile, importing roads for Larimer county, which returns a polyline dataset for all
 
@@ -116,7 +116,7 @@ qtm(poudre_hwy)
 </details>
 
 
-#### Points
+### Points
 
 Most often when you are working with points, you start with an excel file or something similar that consists of the raw latitude and longitude. When you have spatial data that is not explicitly spatial yet or not in the `sf` format, you use the `st_as_sf()` function to transform it.
 
