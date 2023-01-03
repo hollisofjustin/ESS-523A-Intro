@@ -6,6 +6,10 @@ This week you will be introduced to R, RStudio, R Markdown and GitHub. You will 
 
 ## Resources
 In addition to this week's lesson content, here are some useful and recommended resources for getting started with coding in R:
+- [R for Data Science](https://r4ds.hadley.nz/) (second edition)
+- [Happy Git and GitHub for the useR](https://happygitwithr.com/index.html)
+- [RStudio Education](https://education.rstudio.com/learn/beginner/): Lots of useful links for beginners on this page
+- [Interactive tutorials from Posit (formerly RStudio)](https://posit.cloud/learn/primers): These tutorials were made using the `learnr` package and allow you to run R code directly from your browser
 
 
 ## Material/Assignmnet
