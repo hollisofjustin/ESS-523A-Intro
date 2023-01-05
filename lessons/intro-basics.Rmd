@@ -27,7 +27,7 @@ When you first open RStudio, it is split into 3 panels:
 
 <br>
 
-To write and save code you use scripts. You can open a new script with File -> New File or by clicking the icon with the green plus sign in the upper left corner. When you open a script, RStudio then opens a fourth **'Source' panel** in the upper-left to write and save your code. You can also send code from a script directly to the console to execute it by highlighting the code line/chunk (or place your cursor at the end of the code chunk) and hit CTRL+ENTER on a PC or CMD+ENTER on a Mac.
+To write and save code you use scripts. You can open a new script with File -\> New File or by clicking the icon with the green plus sign in the upper left corner. When you open a script, RStudio then opens a fourth **'Source' panel** in the upper-left to write and save your code. You can also send code from a script directly to the console to execute it by highlighting the code line/chunk (or place your cursor at the end of the code chunk) and hit CTRL+ENTER on a PC or CMD+ENTER on a Mac.
 
 ![Image Credit: Software Carpentry](https://swcarpentry.github.io/r-novice-gapminder/fig/01-rstudio-script.png)
 
@@ -57,7 +57,7 @@ git clone {insert https URL here}
 
 Hopefully this runs, and if you navigate in the 'Files' pane you should now see a folder with your repo name. If you have issues, make sure you have set up your personal HTTPS tokens correctly as instructed [here](https://happygitwithr.com/https-pat.html).
 
-Now we can set up an R Project that is connected to our Git repor and start coding!
+Now we can set up an R Project that is connected to our Git repo and start coding!
 
 ## 3. R Projects
 
@@ -70,6 +70,8 @@ You can start an R project in an existing directory or in a new one. To create a
 ![](project-start.png)
 
 To make sure our R Project is talking to our Git repo, we choose 'Existing Directory' and choose your Git repo directory you just cloned to your local machine. Before creating the project, make sure to check 'Open in a new session'.
+
+*Note: Another way you can link an R Project to GitHub is instead of cloning it via the Git terminal, you can start with creating an R Project and at this step choose 'Version Control' and then paste the HTTPS link from the repo.*
 
 Now we are working in our R project that is connected to our Git repo. You can see the working directory printed at the top of your console is now our project directory, and in the 'Files' tab in RStudio you can see we have an .Rproj file, which will open up this R project in RStudio whenever you come back to it. For example close out of this R session, navigate to the project folder on your computer, and double-click the .Rproj file.
 
@@ -101,7 +103,6 @@ print("Hello World")
 
 paste("Hello", "World", sep = "-")
 ```
-
 
 ### 4.2 Packages
 
@@ -185,7 +186,6 @@ Notice that the file contains three types of content:
 Since this is a notebook style document, you run the code chunks by clicking the green play button, and then the output is returned directly below the chunk.
 
 When you want to create a report from your notebook, you render it by hitting the 'knit' button, and it will render to the format you have specified in the YAML header. In order to do so though, you need to have the `rmarkdown` package installed, so go back to your 'setup.R' script, add `rmarkdown` to your packages variable and save it.
-
 
 You can delete the rest of the code/text below the YAML header, and insert a new code chunk at the top. You can insert code chunks by clicking the green C with the '+' sign at the top of the source editor, or with the keyboard short cut (Ctrl+Alt+I for Windows, Option+Command+I for Macs). For the rest of the lesson (and course) you will be writing and executing code through code chunks, and you can type any notes in the main body of the document (*refer to the lecture video about using the Source vs. Visual editor*).
 
