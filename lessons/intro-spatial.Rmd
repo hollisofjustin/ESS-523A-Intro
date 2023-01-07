@@ -3,7 +3,6 @@ title: "Intro to Spatial Data in R"
 author: "Caitlin Mothes"
 date: '2022-12-24'
 output: github_document
-always_allow_html: true
 ---
 
 ```{r setup, include= FALSE}
@@ -36,7 +35,7 @@ Working in the same R Project you created in the Intro lesson, create a new R Ma
 
 We will be using the `tigris` package to import some vector data, and `elevatr` to import a raster data set of elevation. Add those packages to your 'setup.R' script, and run it at the top of your new R Markdown document.
 
-```{r, eval=TRUE}
+```{r}
 source("setup.R")
 ```
 
@@ -106,15 +105,17 @@ By default, the `tigris` package imports spatial data in `sf` format, which stan
 For example, we are going to do an exercise for the Poudre Canyon Highway, so we want to filter out the roads data set to only those features. Using your investigative geography skills, find the highway on your map, find out what the exact 'FULLNAME' attribute is, and use that to `filter()` the data set.
 
 <details>
-  <summary>Show Answer</summary>
+
+<summary>Show Answer</summary>
+
 ```{r}
 poudre_hwy <- roads %>% 
   filter(FULLNAME == "Poudre Canyon Hwy")
 
 qtm(poudre_hwy)
 ```
-</details>
 
+</details>
 
 ### Points
 
@@ -192,11 +193,12 @@ When we see this on a map, we see that it actually extends beyond Colorado due t
 Let's inspect this raster layer a little, just by printing to the console we see a bunch of metadata like resolution (cell size), extent, CRS, and file name.
 
 ### 
+
 `terra`
 
 We can use the `terra` package to work with raster data. For example, we only want to see elevation along the Poudre highway. We can use `crop` to crop the raster to the extent of our `roads` shapefile (to get all of Larimer County), using the `ext()` function to get the extent of that spatial object.
 
-```{r eval=FALSE}
+```{r}
 # If we try this, we get an error
 elevation_crop <- crop(elevation, ext(poudre_hwy))
 
@@ -239,7 +241,7 @@ All of the spatial data we've worked with are only saved as objects in our envir
 
 To save vector data with `sf`, use `write_sf()`
 
-```{r eval=FALSE}
+```{r}
 write_sf(poudre_hwy, "data/poudre_hwy.shp")
 
 write_sf(poudre_points_prj, "data/poudre_points.shp")
@@ -249,7 +251,7 @@ While you can give the file any name you want, note that you must put '.shp' as 
 
 To save raster data with `terra` use `writeRaster()`
 
-```{r eval=FALSE}
+```{r}
 writeRaster(elevation_crop, "data/elevation_larimer.tif")
 ```
 
@@ -263,7 +265,7 @@ However, there are times you may want to save your variables as R files, such as
 
 Save the three variables you added to that last map, erase them from your environment, and read them back in:
 
-```{r eval=FALSE}
+```{r}
 save(poudre_hwy, poudre_points_prj, file = "data/spatial_objects.RData")
 ```
 
@@ -271,23 +273,23 @@ Note that you must add the 'file =' to your second argument.
 
 Now remove them with `rm()` (be careful with this function though, it is permanent!) and load them back in with `load()`
 
-```{r eval=FALSE}
+```{r}
 rm(poudre_hwy, poudre_points_prj)
 ```
 
 See they are no longer in your Environment pane, but after you load the .RData file back in, it loads in those three objects with the same names they were given when you saved them.
 
-```{r eval=FALSE}
+```{r}
 load("data/spatial_objects.RData")
 ```
 
 Note that `terra` objects don't properly save to .RData files, but there is a work around if you save a single `terra` object as an .RDS file. Here is that workflow, there is just a second step to 'unpack' the loaded .RDS object with `rast()`.
 
-```{r eval=FALSE}
+```{r}
 saveRDS(elevation_crop, "data/elevation_crop.RDS")
 ```
 
-```{r eval=FALSE}
+```{r}
 readRDS("data/elevation_crop.RDS") %>% rast()
 ```
 
@@ -297,7 +299,7 @@ Note that with .RDS files you must assign the loaded file to a new environmental
 
 To read in shapefiles, you use `read_sf()`
 
-```{r eval=FALSE}
+```{r}
 read_sf("data/poudre_hwy.shp")
 ```
 
@@ -305,12 +307,11 @@ See that when you saved the shapefiles, there were many other auxillary files sa
 
 To read in raster files you use the `rast()` function and file path with the appropriate file extension
 
-```{r eval=FALSE}
+```{r}
 rast("data/elevation_larimer.tif")
 ```
 
 Remember when reading in files you will want to assign them to a new variable name with `<-` to keep them in your environment.
-
 
 ### 4. Exercises
 
