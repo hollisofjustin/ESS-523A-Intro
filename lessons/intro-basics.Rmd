@@ -359,7 +359,7 @@ arrange(penguins, desc(species), sex)
 
 Subset rows with `filter()`
 
-You can filter data in many ways using comparison operators (`>`, `>=`, `<`, `<=`, `!=` (not equal), and `==` (equal)), logical operators (`&` is "and", `|` is "or", and `!` is "not") and other operations such as `%in%`, which returns everything that matches at least on of the values in a given vector, and `is.na()` and `!is.na()` to return all missing or all non-missing data.
+You can filter data in many ways using logical operators (\`\>\`, \`\>=\`, \`\<\`, \`\<=\`, \`!=\` (not equal), and \`==\` (equal)), AND (\`&\`), OR (\`\|\`), and NOT (\`!\`) operators, and other operations such as \`%in%\`, which returns everything that matches at least one of the values in a given vector, and \`is.na()\` and \`!is.na()\` to return all missing or all non-missing data.
 
 ```{r}
 filter(penguins, species == "Adelie")
