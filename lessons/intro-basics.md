@@ -1,16 +1,15 @@
 Intro to Environmental Data Science in R
 ================
 Caitlin Mothes
-2022-12-30
+2023-01-13
 
 ## Before this Lesson…
 
-Before this lesson you must complete all set up instructions found here:
-*\[paste link\]* and watch the instructional video for this week:
-*\[paste link to video here\]*.
-
-You should have created a personal account on GitHub, joined the course
-organization, and installed R and RStudio on your computer.
+Before this lesson you must complete all set up instructions found
+[here](https://github.com/Data-Sci-Intro-2023#required-to-do-before-the-class-starts)
+and watch the instructional videos for this week:[Day 1 R Git and GitHub
+Intro](https://youtu.be/l3-xEn1KQxY) and [Day 2 Spatial
+Intro](https://youtu.be/T3M40tbbFwg).
 
 ## 1. Getting to know RStudio
 
@@ -87,7 +86,7 @@ now see a folder with your repo name. If you have issues, make sure you
 have set up your personal HTTPS tokens correctly as instructed
 [here](https://happygitwithr.com/https-pat.html).
 
-Now we can set up an R Project that is connected to our Git repor and
+Now we can set up an R Project that is connected to our Git repo and
 start coding!
 
 ## 3. R Projects
@@ -114,6 +113,11 @@ To make sure our R Project is talking to our Git repo, we choose
 ‘Existing Directory’ and choose your Git repo directory you just cloned
 to your local machine. Before creating the project, make sure to check
 ‘Open in a new session’.
+
+*Note: Another way you can link an R Project to GitHub is instead of
+cloning it via the Git terminal, you can start with creating an R
+Project and at this step choose ‘Version Control’ and then paste the
+HTTPS link from the repo.*
 
 Now we are working in our R project that is connected to our Git repo.
 You can see the working directory printed at the top of your console is
@@ -519,28 +523,14 @@ package.
 `dplyr` is a Tidyverse package to handle most of your data exploration
 and manipulation tasks.
 
-Sort data with
-<a href="https://dplyr.tidyverse.org/reference/arrange.html"
-style="font-size: 13pt;"><code>arrange()</code></a>
+**Subset rows with `filter()`**
 
-``` r
-arrange(penguins, sex)
-
-#Sort first by species (in descending order) then by sex
-arrange(penguins, desc(species), sex)
-```
-
-**Note: Tidyverse package functions take in column names *without*
-quotations.**
-
-Subset rows with `filter()`
-
-You can filter data in many ways using comparison operators (`>`, `>=`,
-`<`, `<=`, `!=` (not equal), and `==` (equal)), logical operators (`&`
-is “and”, `|` is “or”, and `!` is “not”) and other operations such as
-`%in%`, which returns everything that matches at least on of the values
-in a given vector, and `is.na()` and `!is.na()` to return all missing or
-all non-missing data.
+You can filter data in many ways using logical operators (`>`, `>=`,
+`<`, `<=`, `!=` (not equal), and `==` (equal)), AND (`&`), OR (`|`), and
+NOT (`!`) operators, and other operations such as `%in%`, which returns
+everything that matches at least one of the values in a given vector,
+and `is.na()` and `!is.na()` to return all missing or all non-missing
+data.
 
 ``` r
 filter(penguins, species == "Adelie")
@@ -550,13 +540,20 @@ filter(penguins, species != "Adelie")
 filter(penguins, island %in% c("Dream", "Torgersen") & !is.na(bill_length_mm))
 ```
 
+<div class="alert alert-info">
+
+**Note: Tidyverse package functions take in column names *without*
+quotations.**
+
+</div>
+
 Using `dplyr` functions will not manipulate the original data, so if you
 want to save the returned object you need to assign it to a new
 variable.
 
-Select variables by their column names with
+**Select variables by their column names with
 <a href="https://dplyr.tidyverse.org/reference/select.html"
-style="font-size: 13pt;"><code>select()</code></a>
+style="font-size: 13pt;"><code>select()</code></a>**
 
 `select()` has many helper functions you can use with it, such as
 `starts_with()`, `ends_with()`, `contains()` and many more that are very
@@ -576,9 +573,9 @@ select(penguins, genus = species, island)
 select(penguins, contains("mm"))
 ```
 
-Create new variables with
+**Create new variables with
 <a href="https://dplyr.tidyverse.org/reference/mutate.html"
-style="font-size: 13pt;"><code>mutate()</code></a>
+style="font-size: 13pt;"><code>mutate()</code></a>**
 
 ``` r
 # New variable that calculates bill length in cm
@@ -588,13 +585,16 @@ mutate(penguins, bill_length_cm = bill_length_mm/10)
 mutate(penguins, species_sex = if_else(sex == 'male', paste0(species,"_m"), paste0(species, "_f")))
 ```
 
-These can all be used in conjunction with
-[`group_by()`](https://dplyr.tidyverse.org/reference/group_by.html)
-which changes the scope of each function from operating on the entire
-dataset to operating on it group-by-group. `group_by()` becomes even
-more powerful when used along with `summarise()`. However before we
-start using multiple operations in conjunction with one another, we need
-to talk about the pipe operator `%>%`.
+[**`group_by()`**](https://dplyr.tidyverse.org/reference/group_by.html)
+**and
+[`summarise()`](https://dplyr.tidyverse.org/reference/summarise.html)**
+
+These can all be used in conjunction with `group_by()` which changes the
+scope of each function from operating on the entire dataset to operating
+on it group-by-group. `group_by()` becomes even more powerful when used
+along with `summarise()`. However before we start using multiple
+operations in conjunction with one another, we need to talk about the
+pipe operator `%>%`.
 
 #### 6.4.1 The pipe `%>%`
 
@@ -707,7 +707,7 @@ ggplot(penguins) +
   geom_histogram(mapping = aes(x = flipper_length_mm))
 ```
 
-![](intro-basics_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
+![](intro-basics_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
 
 This isn’t too informative, we want to see the distributions for each
 species. We can do that by coloring the bars by species
@@ -719,7 +719,7 @@ ggplot(penguins) +
   scale_fill_manual(values = c("darkorange","darkorchid","cyan4"))
 ```
 
-![](intro-basics_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
+![](intro-basics_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
 
 Or we can use `facet_wrap()` to create a separate plot for each species
 
@@ -730,7 +730,7 @@ ggplot(penguins) +
   facet_wrap(~species)
 ```
 
-![](intro-basics_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
+![](intro-basics_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
 
 Lets make a quick bar plot showing the total count of each species
 studied on each island
@@ -740,7 +740,7 @@ ggplot(penguins) +
   geom_bar(mapping = aes(x = island, fill = species))
 ```
 
-![](intro-basics_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
+![](intro-basics_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
 
 As you may have already noticed, the beauty about `ggplot2` is there are
 a million ways you can customize your plots. This example builds on our
@@ -756,7 +756,7 @@ ggplot(penguins, aes(x = island, fill = species)) +
   coord_flip()
 ```
 
-![](intro-basics_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
+![](intro-basics_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
 
 Now make a scatterplot showing the relationship between body mass and
 flipper length, coloring the point by species
@@ -766,7 +766,7 @@ ggplot(penguins) +
   geom_point(mapping = aes(x = body_mass_g, y = flipper_length_mm, color = species))
 ```
 
-![](intro-basics_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
+![](intro-basics_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
 
 ### 7.1 Exercises
 
