@@ -1,7 +1,7 @@
 Intro to Environmental Data Science in R
 ================
 Caitlin Mothes
-2023-01-13
+2023-01-17
 
 ## Before this Lesson…
 
@@ -39,8 +39,9 @@ File -\> New File or by clicking the icon with the green plus sign in
 the upper left corner. When you open a script, RStudio then opens a
 fourth **‘Source’ panel** in the upper-left to write and save your code.
 You can also send code from a script directly to the console to execute
-it by highlighting the code line/chunk (or place your cursor at the end
-of the code chunk) and hit CTRL+ENTER on a PC or CMD+ENTER on a Mac.
+it by highlighting the **entire** code line/chunk (or place your cursor
+at the end of the code chunk) and hit CTRL+ENTER on a PC or CMD+ENTER on
+a Mac.
 
 ![Image Credit: Software
 Carpentry](https://swcarpentry.github.io/r-novice-gapminder/fig/01-rstudio-script.png)
@@ -48,16 +49,20 @@ Carpentry](https://swcarpentry.github.io/r-novice-gapminder/fig/01-rstudio-scrip
 It is good practice to add comments/notes throughout your scripts to
 document what the code is doing. To do this start a line with a `#`. R
 knows to ignore everything after a `#`, so you can write whatever you
-want there.
+want there. Note that R reads line by line, so if you want your comments
+to carry over multiple lines you need a `#` at every line.
 
 ## 2. Version Control with Git and GitHub
 
-From this weeks instructional video and online lessons you learned how
-to set up a GitHub account, create repositories, and collaborate with
-others via forking, branching, pull requests, and posting issues.
+From this week’s [instructional video](https://youtu.be/l3-xEn1KQxY) and
+[set up
+instructions/tutorials](https://happygitwithr.com/github-acct.html) you
+learned some of the basics of working in Git, GitHub and connecting Git
+to your R environment.
 
 For today’s lesson, you are going to work through creating a Git
-repository, linking Git and RStudio, and push some R code to the repo.
+repository, linking it to an RStudio Project, working through some R
+fundamentals, and pushing your code to your Git repo.
 
 ### 2.1 Create a Git Repo
 
@@ -123,9 +128,9 @@ Now we are working in our R project that is connected to our Git repo.
 You can see the working directory printed at the top of your console is
 now our project directory, and in the ‘Files’ tab in RStudio you can see
 we have an .Rproj file, which will open up this R project in RStudio
-whenever you come back to it. For example close out of this R session,
+whenever you come back to it. **For example close out of this R session,
 navigate to the project folder on your computer, and double-click the
-.Rproj file.
+.Rproj file.**
 
 We also know it is connected to our repo by the existence of the ‘Git’
 tab in the upper right pane. We will be teaching you all how to commit
@@ -184,7 +189,7 @@ function.
 If you have a package installed, you don’t necessarily have to load it
 in with `library()` to use it in your R session. Instead you can type
 the package name followed by `::` and use any functions in that package.
-This may be useful for some one-off functions using specifici package,
+This may be useful for some one-off functions using a specific package,
 however if you will be using packages a lot throughout your workflow you
 will want to load it in to your session. You should also use `::` in
 cases where you have multiple packages loaded that may have conflicting
@@ -210,9 +215,9 @@ to Tidyverse functions for this course.
 
 To make code reproducible (meaning anyone can run your code from their
 local machines) we can write a function that checks whether or not
-necessary packages are installed, if not install them and load them, but
-if they are it will only load them and not re-install. This function
-looks like:
+necessary packages are installed, if not install them and load them, or
+if they are already installed it will only load them and not re-install.
+This function looks like:
 
 ``` r
 packageLoad <-
@@ -296,8 +301,8 @@ switch to Quarto if you want to. You can read more about Quarto
 
 Let’s create a new document by going to File -\> New File -\> R
 Markdown. You will be prompted to add information like title and author,
-fill those in (let’s call it “Intro to R Markdown”) and keep the output
-as HTML for now. Click OK to create the document.
+fill those in (let’s call it “Intro to R and R Markdown”) and keep the
+output as HTML for now. Click OK to create the document.
 
 This creates an outline of an R Markdown document, and you see the
 title, author and date you gave the prompt at the top of the document
@@ -318,8 +323,7 @@ below the chunk.
 When you want to create a report from your notebook, you render it by
 hitting the ‘knit’ button, and it will render to the format you have
 specified in the YAML header. In order to do so though, you need to have
-the `rmarkdown` package installed, so go back to your ‘setup.R’ script,
-add `rmarkdown` to your packages variable and save it.
+the `rmarkdown` package installed.
 
 You can delete the rest of the code/text below the YAML header, and
 insert a new code chunk at the top. You can insert code chunks by
@@ -327,8 +331,7 @@ clicking the green C with the ‘+’ sign at the top of the source editor,
 or with the keyboard short cut (Ctrl+Alt+I for Windows, Option+Command+I
 for Macs). For the rest of the lesson (and course) you will be writing
 and executing code through code chunks, and you can type any notes in
-the main body of the document (*refer to the lecture video about using
-the Source vs. Visual editor*).
+the main body of the document.
 
 The first chunk is almost always your set up code, where you read in
 libraries and any necessary data sets. Here we will execute our set up
@@ -372,10 +375,10 @@ penguins
 ### 6.2 Data Types
 
 This data is structured is a data frame, probably the most common data
-type and one you are most familiar with. These are like Excel spread
-sheets, tabular data organized by rows and columns. However we see at
-the top this is called a `tibble` which is just a fancy kind of data
-frame specific to the `tidyvese`.
+type and one you are most familiar with. These are like Excel
+spreadsheets, tabular data organized by rows and columns. However we see
+at the top this is called a `tibble` which is just a fancy kind of data
+frame specific to the `tidyverse`.
 
 At the top we can see the data type of each column. There are five main
 data types:
@@ -417,10 +420,10 @@ class(penguins$species)
 str(penguins$species)
 ```
 
-When we pull one column from a data frame like we just did above, that
-returns a vector. Vectors are 1-dimensional, and must contain data of a
-single data type (i.e., you cannot have a vector of both numbers and
-characters).
+When we pull one column from a data frame like we just did above using
+the `$` operator, that returns a vector. Vectors are 1-dimensional, and
+must contain data of a single data type (i.e., you cannot have a vector
+of both numbers and characters).
 
 If you want a 1-dimensional object that holds mixed data types and
 structures, that would be a list. You can put together pretty much
@@ -507,12 +510,13 @@ penguins$species
 2.  How many species are in the `penguins` dataset? What islands were
     the data collected for? (Note: the `unique()` function might help)
 
-3.  Create a new data frame that has columns for species, island and
-    flipper length, but just for the Dream island.
+3.  Use indexing to create a new data frame that has only 3 columns:
+    species, island and flipper length columns, and subset all rows for
+    just the ‘Dream’ island.
 
-4.  What is the average flipper length for the Adelie species on Dream
-    island? (Note: explore the `mean()` function and how to deal with NA
-    values).
+4.  Use indexing and the `mean()` function to find the average flipper
+    length for the *Adelie* species on Dream island. (Note: explore the
+    `mean()` function and how to deal with NA values).
 
 ### 6.4 The `dplyr` package
 
@@ -521,9 +525,13 @@ functionality. Now lets dive into the Tidyverse with the `dplyr`
 package.
 
 `dplyr` is a Tidyverse package to handle most of your data exploration
-and manipulation tasks.
+and manipulation tasks. Now that you have learned indexing, you may
+notice the first two `dplyr` functions you are going to learn,
+`filter()` and `select()` act as indexing functions by subsetting rows
+and columns based on specified names and/or conditions.
 
-**Subset rows with `filter()`**
+**Subset rows with
+[`filter()`](https://dplyr.tidyverse.org/reference/filter.html)**
 
 You can filter data in many ways using logical operators (`>`, `>=`,
 `<`, `<=`, `!=` (not equal), and `==` (equal)), AND (`&`), OR (`|`), and
@@ -540,18 +548,14 @@ filter(penguins, species != "Adelie")
 filter(penguins, island %in% c("Dream", "Torgersen") & !is.na(bill_length_mm))
 ```
 
-<div class="alert alert-info">
-
 **Note: Tidyverse package functions take in column names *without*
 quotations.**
-
-</div>
 
 Using `dplyr` functions will not manipulate the original data, so if you
 want to save the returned object you need to assign it to a new
 variable.
 
-**Select variables by their column names with
+**Select columns with
 <a href="https://dplyr.tidyverse.org/reference/select.html"
 style="font-size: 13pt;"><code>select()</code></a>**
 
@@ -585,6 +589,11 @@ mutate(penguins, bill_length_cm = bill_length_mm/10)
 mutate(penguins, species_sex = if_else(sex == 'male', paste0(species,"_m"), paste0(species, "_f")))
 ```
 
+*Notice the use of `paste0()` here, and when we briefly used a similar
+function `paste()` in the ‘Functions’ section above. Explore the
+difference between these two. They are both very useful functions for
+pasting strings together.*
+
 [**`group_by()`**](https://dplyr.tidyverse.org/reference/group_by.html)
 **and
 [`summarise()`](https://dplyr.tidyverse.org/reference/summarise.html)**
@@ -592,9 +601,10 @@ mutate(penguins, species_sex = if_else(sex == 'male', paste0(species,"_m"), past
 These can all be used in conjunction with `group_by()` which changes the
 scope of each function from operating on the entire dataset to operating
 on it group-by-group. `group_by()` becomes even more powerful when used
-along with `summarise()`. However before we start using multiple
-operations in conjunction with one another, we need to talk about the
-pipe operator `%>%`.
+along with `summarise()` to calculate some specified summary statistic
+for each group. However before we start using multiple operations in
+conjunction with one another, we need to talk about the pipe operator
+`%>%`.
 
 #### 6.4.1 The pipe `%>%`
 
@@ -699,7 +709,7 @@ ggplot(data = <DATA>) +
 ```
 
 If you plan on doing any statistical analysis on your data , one of the
-first things you are likely to do is explore the distirbution of your
+first things you are likely to do is explore the distribution of your
 variables. You can plot histograms with `geom_histogram()`
 
 ``` r
@@ -709,8 +719,9 @@ ggplot(penguins) +
 
 ![](intro-basics_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
 
-This isn’t too informative, we want to see the distributions for each
-species. We can do that by coloring the bars by species
+This tells us there may be a lot of variation in flipper size among
+species. We can use the ‘fill =’ argument to color the bars by species,
+and `scale_fill_manual()` to specify the colors.
 
 ``` r
 # Histogram example: flipper length by species
@@ -721,7 +732,10 @@ ggplot(penguins) +
 
 ![](intro-basics_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
 
-Or we can use `facet_wrap()` to create a separate plot for each species
+Cool, now we can see there seems to be some pretty clear variation in
+flipper size among species. Another way to visualize across groups is
+with `facet_wrap()`, which will create a separate plot for each group,
+in this case species.
 
 ``` r
 ggplot(penguins) +
@@ -758,8 +772,10 @@ ggplot(penguins, aes(x = island, fill = species)) +
 
 ![](intro-basics_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
 
-Now make a scatterplot showing the relationship between body mass and
-flipper length, coloring the point by species
+We can use `geom_point()` to view the relationship between two variables
+by specifying the x and y axes. Say we want to visualize the
+relationship between penguin body mass and flipper length and color the
+point by species:
 
 ``` r
 ggplot(penguins) +
@@ -777,7 +793,7 @@ ggplot(penguins) +
 
 ## 8. Read and Write Data
 
-We used an R data package today and read in our data frame, but that
+We used an R data package today to read in our data frame, but that
 probably isn’t how you will normally read in your data.
 
 There are many ways to read and write data in R. To read in .csv files,
