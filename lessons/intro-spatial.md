@@ -1,7 +1,7 @@
 Intro to Spatial Data in R
 ================
 Caitlin Mothes
-2022-12-24
+2023-01-17
 
 ## 1. Spatial Data Formats
 
@@ -30,9 +30,9 @@ new R Markdown document for this lesson. You will also need a couple new
 R data packages to import some of the spatial data sets for this lesson.
 
 We will be using the `tigris` package to import some vector data, and
-`elevatr` to import a raster data set of elevation. Add those packages
-to your ‘setup.R’ script, and run it at the top of your new R Markdown
-document.
+`elevatr` to import a raster data set of elevation. Make sure those
+packages are included in your ‘setup.R’ script, and run it at the top of
+your new R Markdown document.
 
 ``` r
 source("setup.R")
@@ -54,23 +54,24 @@ of polygons for each county.
 
 ``` r
 # download county shapefile for the state of Colorado
-counties <- tigris::counties(state = "CO")
+counties <- counties(state = "CO")
 ```
 
 The `tigris` package is one of many data retrieval R packages that uses
 API calls to pull in data from various online/open databases directly
 into your R session, without the need to separately download. When you
-close our your R session, these ‘temp’ files are erased, so it does not
+close out your R session, these ‘temp’ files are erased, so it does not
 use up any of your local storage. At the end of this lesson you will
 learn how to save shapefiles to your computer if you do in fact want to
 store and use them in the future (e.g., you manipulated a data set quite
-a bit and don’t want to re-run the entier process every new R session)
+a bit and don’t want to re-run the entire process every new R session).
 
 ### **Lines**
 
-`tigris` has a lot of other available data sets in addition to political
-boundaries. Today let’s work with another shapefile, importing roads for
-Larimer county, which returns a polyline dataset for all
+`tigris` has many other data sets in addition to political boundaries.
+Today let’s work with another shapefile, importing roads for Larimer
+county, which returns a polyline dataset for all roads in Larimer
+County.
 
 ``` r
 roads <- roads(state = "CO", county = "Larimer")
@@ -78,7 +79,7 @@ roads <- roads(state = "CO", county = "Larimer")
 
 ### [`tmap`](https://r-tmap.github.io/tmap/)
 
-Throughout this course we will be using the `tmap` package to produce
+Throughout this lesson we will be using the `tmap` package to produce
 quick static or interactive maps. It should be included in your setup
 script, but if not be sure to add it now.
 
@@ -95,7 +96,7 @@ tmap_mode("view")
 Lets view our Colorado counties and Larimer County roads shapefiles. To
 make a “quick thematic map” in `tmap` you can use the `qtm()` function.
 You can also use `tm_shape()` plus the type of spatial layer (e.g.,
-`tm_polygons()` to add your layers to the map if you want to customize
+`tm_polygons()`) to add your layers to the map if you want to customize
 the map a little more.
 
 ``` r
@@ -111,8 +112,7 @@ tm_shape(roads)+
 ```
 
 Rendering the map may take a little while due to relatively large size
-of the `roads` object and some projection issues (which we will talk
-about later).
+of the `roads` object.
 
 Mess around with this map a little bit. See that you can change the
 basemap, turn layers on and off, and click on features to see their
@@ -124,11 +124,11 @@ you run `class(counties)` ?
 ### [`sf`](https://r-spatial.github.io/sf/)
 
 By default, the `tigris` package imports spatial data in `sf` format,
-which stands for ‘simple features’.The `sf` package provides an easy and
-efficient way to work with vector data, and represents spatial features
-as a `data.frame` or `tibble` with a geometry column, and therefore also
-works well with `tidyverse` packages to perform manipulations like you
-would a data frame.
+which stands for ‘simple features’. The `sf` package provides an easy
+and efficient way to work with vector data, and represents spatial
+features as a `data.frame` or `tibble` with a geometry column, and
+therefore also works well with `tidyverse` packages to perform
+manipulations like you would a data frame.
 
 For example, we are going to do an exercise for the Poudre Canyon
 Highway, so we want to filter out the roads data set to only those
@@ -181,12 +181,12 @@ qtm(poudre_hwy)+
 ### Coordinate Reference Systems
 
 Probably the most important part of working with spatial data is the
-coordinate reference system (CRS) that is used. In order to analyze and
-visualize spatial data, all objects must be in the exact same CRS.
+coordinate reference system (CRS) that is used. In order to analyze
+spatial data, all objects should be in the exact same CRS.
 
 We can check a spatial object’s CRS by printing it to the console, which
 will return a bunch of metadata about the object. You can specifically
-return the CRS ror `sf` objects we check the CRS with `st_crs`
+return the CRS for `sf` objects with `st_crs()`.
 
 ``` r
 # see the CRS in the header metadata:
@@ -205,7 +205,7 @@ st_crs(counties) == st_crs(poudre_points_sf)
 Uh oh, the CRS of our points and lines doesn’t match. While `tmap`
 performs some on-the-fly transformations to map the two layers together,
 in order to do any analyses with these objects you’ll need to re-project
-one of them. You can project once object’s CRS to that of another with
+one of them. You can project one object’s CRS to that of another with
 `st_transform` like this:
 
 ``` r
@@ -226,7 +226,7 @@ supply a spatial object specifying the extent of the returned elevation
 raster and the resolution (specified by the zoom level `z`). We are
 importing elevation at \~ 1km resolution (more like 900 m), and we can
 use our `counties` object as the extent we want to download to, which
-will return elevation for the state of Colorado.
+will return elevation tiles for the state of Colorado.
 
 ``` r
 elevation <- get_elev_raster(counties, z = 7)
@@ -247,13 +247,15 @@ tm_shape(elevation)+
 When we see this on a map, we see that it actually extends beyond
 Colorado due to how the Terrain Tiles are spatially organized.
 
-Let’s inspect this raster layer a little, just by printing to the
-console we see a bunch of metadata like resolution (cell size), extent,
-CRS, and file name.
+Let’s inspect this raster layer a little. By printing the object name to
+the console we see a bunch of metadata like resolution (cell size),
+extent, CRS, and file name.
 
-### 
+``` r
+elevation
+```
 
-`terra`
+### `terra`
 
 We can use the `terra` package to work with raster data. For example, we
 only want to see elevation along the Poudre highway. We can use `crop`
@@ -330,9 +332,9 @@ writeRaster(elevation_crop, "data/elevation_larimer.tif")
 ```
 
 Same as with the vector data, when saving raster data you must add the
-‘.tif’ file extension to the name. Unlike vector data, there are various
-formats raster data can be stored as (e.g., ASCII, ESRI Grid) but
-GeoTiffs are the most common and generally easiest to deal with in R.
+‘.tif’ file extension to the name. There are various formats raster data
+can be stored as (e.g., ASCII, ESRI Grid) but GeoTiffs are the most
+common and generally easiest to deal with in R.
 
 ### 3.2 .RData Files
 
@@ -340,11 +342,13 @@ Another way you can store data is saving your environmental variables as
 R Data objects. You may have already seen ‘.RData’ files in your folders
 before if you ever click ‘yes’ when closing out of RStudio asks you to
 save your workspace. What this does is save everything in your
-environment to a file with a ‘.RData’ extention in your project
+environment to a file with a ‘.RData’ extension in your project
 directory, and then every time you open your project it reloads
 everything that was in the environment. This however is often poor
 practice, as it prevents you from writing reproducible code and all
-those variables start racking up storage space on your computer.
+those variables start racking up storage space on your computer. We
+recommend changing this setting by going to Global Options and under
+‘Workspace’ set ‘Save workspace to .RData on exit’ to ‘**Never**’.
 
 However, there are times you may want to save your variables as R files,
 such as when you have a set of variables you want to quickly re-load at
@@ -352,8 +356,9 @@ the beginning of your session, or some files that are pretty large in
 size (R object files are much smaller). You can save single or multiple
 variables to an .RData file, or single variables to an .RDS file.
 
-Save the three variables you added to that last map, erase them from
-your environment, and read them back in:
+Since the `poudre_hwy` and `poudre_points_prj` were objects you created
+in this session, to avoid the need to recreate them you can save them to
+an .RData file:
 
 ``` r
 save(poudre_hwy, poudre_points_prj, file = "data/spatial_objects.RData")
@@ -361,16 +366,17 @@ save(poudre_hwy, poudre_points_prj, file = "data/spatial_objects.RData")
 
 Note that you must add the ‘file =’ to your second argument.
 
-Now remove them with `rm()` (be careful with this function though, it is
-permanent!) and load them back in with `load()`
+Now to test out how .RData files work, remove them from your environment
+with `rm()` (*be careful with this function though, it is permanent!*)
+and load them back in with `load()`
 
 ``` r
 rm(poudre_hwy, poudre_points_prj)
 ```
 
 See they are no longer in your Environment pane, but after you load the
-.RData file back in, it loads in those three objects with the same names
-they were given when you saved them.
+.RData file back in, it loads in those two objects with the same
+environmental names they were given when you saved them.
 
 ``` r
 load("data/spatial_objects.RData")
@@ -401,12 +407,12 @@ To read in shapefiles, you use `read_sf()`
 read_sf("data/poudre_hwy.shp")
 ```
 
-See that when you saved the shapefiles, there were many other auxillary
+See that when you saved the shapefiles, there were many other auxiliary
 files saved with it. It is VERY important that whenever you share
-shapefiles, all the auxillary files are saved with it, so often
+shapefiles, all the auxiliary files are saved with it, so often
 shapefiles are transferred via .zip folders. However, when reading
 shapefiles into R you only specify the file with the ‘.shp’ extension.
-As long as all the other auxillary files are saved in that same folder,
+As long as all the other auxiliary files are saved in that same folder,
 it will read in the shapefile correctly.
 
 To read in raster files you use the `rast()` function and file path with
@@ -431,5 +437,5 @@ variable name with `<-` to keep them in your environment.
     Poudre Canyon (note: explore the `extract()` function in the `terra`
     package).
 
-4.  Why are their 4 features in our Poudre Canyon Highway variable
+4.  Why are there 4 features in our Poudre Canyon Highway variable
     instead of 1?
