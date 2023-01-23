@@ -1,0 +1,125 @@
+---
+title: "IntroBasics-JH"
+author: "Justin Hollis"
+date: "2023-01-21"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+Load the Penguins Dataset
+```{r}
+
+data("penguins")
+```
+
+
+1.  Why don't the following lines of code work? Tweak each one so the code runs
+
+    ```{r}
+    myList[["Fruit"]]
+    ```
+
+    ```{r}
+    penguins$flipper_length_mm
+    ```
+
+    ```{r}
+    penguins%>%
+      filter(island =='Dream')
+    ```
+
+
+2.  How many species are in the `penguins` dataset? What islands were the data collected for? (Note: the `unique()` function might help)
+
+```{r}
+length(unique(penguins$species))
+unique(penguins$island)
+
+```
+
+
+3.  Use indexing to create a new data frame that has only 3 columns: species, island and flipper length columns, and subset all rows for just the 'Dream' island.
+
+```{r}
+subset <- penguins%>%  
+  select(species, island, flipper_length_mm)%>%
+  filter(island == "Dream")
+
+```
+
+
+4.  Use indexing and the `mean()` function to find the average flipper length for the *Adelie* species on Dream island. (Note: explore the `mean()` function and how to deal with NA values).
+```{r}
+mean(subset$flipper_length_mm[subset$species == "Adelie"])
+```
+
+
+6.3.2 Exercises
+
+1.  Reorder the variables in `penguins` so that `year` is the first column followed by the rest (Hint: look into the use of `everything()`).
+```{r}
+yearfirst <- penguins %>% 
+  relocate(year, .before = species)
+
+
+```
+
+
+2.  Create a new column called 'size_group' where individuals with body mass greater than the overall average are called 'large' and those smaller are called 'small'.
+```{r}
+
+avg <- mean(penguins$body_mass_g, na.rm = TRUE)
+ yearfirst %>% 
+  mutate(size_group = case_when(avg < body_mass_g ~ "Large",
+                              avg > body_mass_g ~ "Small"))
+ 
+  
+```
+
+
+3.  Find out which year for each species were individuals on average the largest according to body mass. ????? 
+
+```{r}
+penguins %>% 
+group_by(year, species) %>% 
+  summarise(mean(penguins$body_mass_g, na.rm = TRUE), year)
+```
+
+
+4.  You want to filter data for years that are *not* in a vector of given years, but this code doesn't work. Tweak it so that it does. (Yes, you could just filter year to equal 2007 in this case but there is a trouble-shooting lessons here).
+    ```{r}
+    penguins %>% 
+      filter(year !%in% c(2008, 2009))
+    ```
+
+### 7.1 Exercises
+
+1.  Make a barplot showing the average flipper length for each species.
+```{r calculating the mean flipper length for each species}
+meanflip <- penguins %>% 
+group_by(species) %>% 
+summarise(mean = mean(flipper_length_mm, na.rm = TRUE))
+```
+
+
+```{r graphing the mean flipper length for each species}
+ggplot(data = meanflip)+
+  geom_col(mapping = aes(x = species, y = mean , fill = species), width = 0.5)
+```
+
+2.  Make a scatter plot of bill length compared to bill depth but only for observations on the Dream island.
+```{r grouping by observation on dream island}
+ dream <- penguins%>%
+      filter(island =='Dream')
+
+```
+```{r plotting bill length vs bill depth }
+
+ggplot(data = dream)+
+  geom_point(mapping = aes(x = bill_length_mm, y = bill_depth_mm, color = species))
+
+```
+
+
+
+

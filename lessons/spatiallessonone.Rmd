@@ -1,0 +1,153 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r}
+source("lessons/setup.R")
+```
+
+
+#Import Colorado Counties with Tigris 
+```{r}
+counties <- counties(state="CO")
+```
+
+
+# Import Roads for Larimer County 
+```{r}
+roads <- roads(state = "CO", county = "Larimer")
+```
+
+```{r}
+tmap_mode("view")
+qtm(counties)+
+  qtm(roads)
+```
+
+
+
+#look at the class of counties 
+```{r}
+class(counties)
+```
+
+#point data 
+```{r}
+poudre_points <- data.frame(name = c("Mishawaka", "Rustic", "Blue Lake Trailhead"),
+                            long = c(-105.35634, -105.58159, -105.85563),
+                            lat = c(40.68752, 40.69687, 40.57960))
+
+
+```
+
+
+#Covert to spatial
+
+```{r}
+poudre_points_sf <- st_as_sf(poudre_points, coords = c("long", "lat"), crs = 4326)
+qtm(poudre_points_sf)
+```
+
+
+#rasterdata
+```{r}
+
+elevation <- get_elev_raster(counties, z=7)
+
+qtm(elevation)
+tm_shape(elevation)+
+  tm_raster(style ="cont" , title = "Elevation (m)")
+```
+
+
+
+#the terra package 
+
+```{r}
+elevation <-rast(elevation)
+
+names(elevation) <- "Elevation"
+
+```
+
+
+#Check Projections 
+
+```{r}
+st_crs(counties)
+crs(counties) == crs(elevation)
+```
+
+#project elevation layer 
+```{r}
+elevation_prj<-- terra::project(elevation, counties)
+```
+
+
+#crop elevation to counties extent 
+```{r}
+elevation_crop <- crop(elevation, ext(counties))
+qtm(elevation_crop)
+```
+
+
+
+#Read and Write Spatial Data 
+```{r}
+write_sf(counties, "data/counties.shp")
+```
+
+
+
+#Save raster data 
+```{r}
+writeRaster(elevation_crop, "data/elevation.tif")
+```
+
+
+
+#save .Rdata
+```{r}
+save(counties, roads, file= "data/spatial_objects.Rdata")
+rm(counties, roads)
+
+```
+
+
+#1.  Filter out the `counties` data set to only include Larimer, Denver, and Pueblo counties.
+
+```{r}
+countsub <- counties %>%  
+ filter(NAME == "Denver" | NAME == "Larimer" | NAME == "Pueblo")
+
+```
+
+
+#2.  Make a map of the `counties` data colored by county area. Make a second map of counties colored by their total area of water.
+
+```{r}
+tmap_mode("view")
+qtm(countsub)
+```
+
+
+#3.  Make a barplot comparing the elevation of your 3 points in the Poudre Canyon (note: explore the `extract()` function in the `terra` package).
+cannot get the points to plot 
+
+```{r pull elevation points}
+elevation_points <- get_elev_point(poudre_points_sf)
+```
+```{r barplot}
+ggplot(data = elevation_points)+
+  geom_col(mapping = aes(x = name, y = elevation , fill = name), width = 0.5)+
+  labs(x = "", y = "Elevation (m)", fill = "")
+  
+```
+
+
+#4.  Why are there 4 features in our Poudre Canyon Highway variable instead of 1?
+
+
